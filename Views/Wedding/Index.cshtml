@@ -1,0 +1,45 @@
+<nav>
+    <a href="/logout">Logout</a>
+    <h1>Welcome to Wedding Planner</h1>
+</nav>
+<main>
+    <table class="table table-hover table-striped">
+        <thead>
+            <tr>
+                <th>Wedding</th>
+                <th>Date</th>
+                <th>Guest</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                foreach (var wedding in ViewBag.Weddings)
+                {
+                    <tr>
+                        <td><a href="/info/@wedding.WeddingId">@wedding.WedderOne & @wedding.WedderTwo</a></td>
+                        <td>@wedding.Date.ToString("MMMM, dd, yyyy")</td>
+                        <td>@wedding.Guests.Count</td>
+                        @if (@wedding.UserId == ViewBag.UserId)
+                        {
+                            <td><a href="/delete/@wedding.WeddingId">Delete</a></td>
+                        } else {
+                            var rsvpd = false;
+                            foreach(var guest in @wedding.Guests) {
+                                if (guest.UserId == ViewBag.UserId && guest.WeddingId == @wedding.WeddingId) {
+                                    rsvpd = true;
+                                }
+                            }
+                            if (rsvpd == true) {
+                                <td><a href="/unrsvp/@wedding.WeddingId">un-RSVP</a></td>   
+                            } else {
+                                <td><a href="/rsvp/@wedding.WeddingId">RSVP</a></td>                            
+                            }
+                        }
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+    <a href="/newwedding"><button class="btn btn-primary">New Wedding!</button></a>
+</main>
